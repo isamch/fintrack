@@ -23,8 +23,8 @@ const connectDB = async () => {
       `MySQL Connected: ${sequelize.getDialect()}@${process.env.DB_HOST}:${process.env.DB_PORT || 3306}/${process.env.DB_NAME}`
     );
 
-    const shouldAlter = process.env.NODE_ENV !== "production";
-    await sequelize.sync({ alter: shouldAlter });
+    // Avoid using alter in dev to prevent index accumulation issues
+    await sequelize.sync();
     console.log("Sequelize models synchronized");
 
   } catch (error) {

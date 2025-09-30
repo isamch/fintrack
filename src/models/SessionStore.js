@@ -18,7 +18,8 @@ export const initSessionTable = async () => {
     expiration: 7 * 24 * 60 * 60 * 1000
   });
 
-  await sessionStore.sync();
+  const forceRebuild = String(process.env.SESSION_RESET_SESSIONS || '').toLowerCase() === 'true';
+  await sessionStore.sync({ force: forceRebuild });
   synced = true;
   return true;
 }; 

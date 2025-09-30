@@ -35,7 +35,7 @@
 					<div>
 						<div class="text-lg font-semibold"><%= user && user.name %></div>
 						<div class="text-sm text-slate-600"><%= user && user.email %></div>
-						<div class="mt-2 inline-block px-2 py-1 rounded-full text-xs border <%= (req.session && req.session.emailVerified) ? 'text-green-700 border-green-300 bg-green-50' : 'text-amber-700 border-amber-300 bg-amber-50' %>"><%= (req.session && req.session.emailVerified) ? 'Email verified' : 'Not verified' %></div>
+						<div class="mt-2 inline-block px-2 py-1 rounded-full text-xs border <%= emailVerified ? 'text-green-700 border-green-300 bg-green-50' : 'text-amber-700 border-amber-300 bg-amber-50' %>"><%= emailVerified ? 'Email verified' : 'Not verified' %></div>
 					</div>
 				</div>
 			</div>

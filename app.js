@@ -8,7 +8,7 @@ import authRouter from './src/routes/web/authRoute.js';
 import homeRouter from './src/routes/web/homeRouter.js';
 
 // import db:
-import connectDB from './src/config/db.js';
+import connectDB, { sequelize } from './src/config/db.js';
 
 // import middlewares:
 import errorHandler from './src/middleware/errorHandler.js';
@@ -16,6 +16,8 @@ import errorHandler from './src/middleware/errorHandler.js';
 // others :
 import cookieParser from "cookie-parser";
 import session from 'express-session';
+import connectSessionSequelize from 'connect-session-sequelize';
+import { initSessionTable } from './src/models/SessionStore.js';
 
 
 
@@ -31,19 +33,6 @@ app.use(express.urlencoded({ extended: true }));
 // cookies parser
 app.use(cookieParser());
 
-// session (for web auth)
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'change_me',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 7 * 24 * 60 * 60 * 1000
-  }
-}));
-
 
 // Configure EJS view engine
 app.set('view engine', 'ejs');
@@ -52,6 +41,31 @@ app.set('views', './src/view');
 
 // connect db
 await connectDB();
+
+// ensure sessions table exists
+await initSessionTable();
+
+// configure session to use the Sequelize sessions table
+const SequelizeStore = connectSessionSequelize(session.Store);
+const sessionStore = new SequelizeStore({
+  db: sequelize,
+  tableName: 'sessions',
+  checkExpirationInterval: 15 * 60 * 1000,
+  expiration: 7 * 24 * 60 * 60 * 1000
+});
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'change_me',
+  resave: false,
+  saveUninitialized: false,
+  store: sessionStore,
+  cookie: {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  }
+}));
 
 
 // web routers (EJS views)

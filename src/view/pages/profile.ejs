@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><%= title %></title>
+	<style>
+		:root {
+			--bg: #0f172a;
+			--card: #111827;
+			--muted: #94a3b8;
+			--text: #e5e7eb;
+			--accent: #3b82f6;
+		}
+		body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 0; }
+		.container { max-width: 960px; margin: 40px auto; padding: 0 16px; }
+		.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+		.header a, .header form button { color: var(--text); background: transparent; border: 1px solid #334155; padding: 8px 12px; border-radius: 8px; cursor: pointer; text-decoration: none; }
+		.grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+		@media (min-width: 768px) { .grid { grid-template-columns: 320px 1fr; } }
+		.card { background: linear-gradient(180deg, #0b1220, #0a0f1a); border: 1px solid #1f2937; border-radius: 16px; padding: 20px; }
+		.avatar { width: 96px; height: 96px; border-radius: 50%; background: #1f2937; display: inline-flex; align-items: center; justify-content: center; font-size: 36px; color: var(--accent); border: 2px solid #334155; }
+		.row { margin-top: 12px; }
+		.label { color: var(--muted); font-size: 13px; }
+		.value { font-size: 16px; font-weight: 600; }
+		.badge { display: inline-block; background: rgba(59,130,246,0.15); color: var(--accent); border: 1px solid rgba(59,130,246,0.35); padding: 4px 8px; border-radius: 999px; font-size: 12px; margin-top: 8px; }
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<h2>الملف الشخصي</h2>
+			<div>
+				<a href="/">الرئيسية</a>
+				<form action="/logout" method="post" style="display:inline-block; margin-inline-start:8px;">
+					<button type="submit">تسجيل الخروج</button>
+				</form>
+			</div>
+		</div>
+
+		<div class="grid">
+			<div class="card">
+				<div style="display:flex; align-items:center; gap:16px;">
+					<div class="avatar"><%= (user && user.name && user.name[0]) ? user.name[0].toUpperCase() : 'U' %></div>
+					<div>
+						<div class="value"><%= user && user.name %></div>
+						<div class="label"><%= user && user.email %></div>
+						<div class="badge"><%= (req.session && req.session.emailVerified) ? 'مفعل البريد' : 'غير مفعل' %></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card">
+				<h3 style="margin-top:0;">المعلومات</h3>
+				<div class="row">
+					<div class="label">الاسم الكامل</div>
+					<div class="value"><%= user && user.name %></div>
+				</div>
+				<div class="row">
+					<div class="label">البريد الإلكتروني</div>
+					<div class="value"><%= user && user.email %></div>
+				</div>
+				<div class="row">
+					<div class="label">الهوية</div>
+					<div class="value"><%= user && user.id %></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html> 

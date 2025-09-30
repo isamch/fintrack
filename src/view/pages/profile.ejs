@@ -1,71 +1,71 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title><%= title %></title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 	<style>
-		:root {
-			--bg: #0f172a;
-			--card: #111827;
-			--muted: #94a3b8;
-			--text: #e5e7eb;
-			--accent: #3b82f6;
-		}
-		body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 0; }
-		.container { max-width: 960px; margin: 40px auto; padding: 0 16px; }
-		.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-		.header a, .header form button { color: var(--text); background: transparent; border: 1px solid #334155; padding: 8px 12px; border-radius: 8px; cursor: pointer; text-decoration: none; }
-		.grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-		@media (min-width: 768px) { .grid { grid-template-columns: 320px 1fr; } }
-		.card { background: linear-gradient(180deg, #0b1220, #0a0f1a); border: 1px solid #1f2937; border-radius: 16px; padding: 20px; }
-		.avatar { width: 96px; height: 96px; border-radius: 50%; background: #1f2937; display: inline-flex; align-items: center; justify-content: center; font-size: 36px; color: var(--accent); border: 2px solid #334155; }
-		.row { margin-top: 12px; }
-		.label { color: var(--muted); font-size: 13px; }
-		.value { font-size: 16px; font-weight: 600; }
-		.badge { display: inline-block; background: rgba(59,130,246,0.15); color: var(--accent); border: 1px solid rgba(59,130,246,0.35); padding: 4px 8px; border-radius: 999px; font-size: 12px; margin-top: 8px; }
+		body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial; }
 	</style>
 </head>
-<body>
-	<div class="container">
-		<div class="header">
-			<h2>الملف الشخصي</h2>
-			<div>
-				<a href="/">الرئيسية</a>
-				<form action="/logout" method="post" style="display:inline-block; margin-inline-start:8px;">
-					<button type="submit">تسجيل الخروج</button>
+<body class="bg-slate-50 text-slate-900">
+	<header class="border-b bg-white">
+		<nav class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+			<a href="/" class="font-semibold text-slate-900">FinTrack</a>
+			<div class="flex items-center gap-3">
+				<a href="/" class="text-sm text-slate-600 hover:text-slate-900">Home</a>
+				<a href="/verify" class="text-sm text-slate-600 hover:text-slate-900">Verify</a>
+				<form action="/logout" method="post">
+					<button type="submit" class="px-3 py-1.5 rounded-md bg-slate-900 text-white hover:bg-slate-800 text-sm">Logout</button>
 				</form>
 			</div>
-		</div>
-
-		<div class="grid">
-			<div class="card">
-				<div style="display:flex; align-items:center; gap:16px;">
-					<div class="avatar"><%= (user && user.name && user.name[0]) ? user.name[0].toUpperCase() : 'U' %></div>
+		</nav>
+	</header>
+	<main class="max-w-6xl mx-auto px-4 py-10">
+		<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+			<div class="md:col-span-1 bg-white border rounded-xl p-6">
+				<div class="flex items-center gap-4">
+					<div class="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center border">
+						<span class="text-2xl font-semibold text-slate-700"><%= (user && user.name && user.name[0]) ? user.name[0].toUpperCase() : 'U' %></span>
+					</div>
 					<div>
-						<div class="value"><%= user && user.name %></div>
-						<div class="label"><%= user && user.email %></div>
-						<div class="badge"><%= (req.session && req.session.emailVerified) ? 'مفعل البريد' : 'غير مفعل' %></div>
+						<div class="text-lg font-semibold"><%= user && user.name %></div>
+						<div class="text-sm text-slate-600"><%= user && user.email %></div>
+						<div class="mt-2 inline-block px-2 py-1 rounded-full text-xs border <%= (req.session && req.session.emailVerified) ? 'text-green-700 border-green-300 bg-green-50' : 'text-amber-700 border-amber-300 bg-amber-50' %>"><%= (req.session && req.session.emailVerified) ? 'Email verified' : 'Not verified' %></div>
 					</div>
 				</div>
 			</div>
-
-			<div class="card">
-				<h3 style="margin-top:0;">المعلومات</h3>
-				<div class="row">
-					<div class="label">الاسم الكامل</div>
-					<div class="value"><%= user && user.name %></div>
-				</div>
-				<div class="row">
-					<div class="label">البريد الإلكتروني</div>
-					<div class="value"><%= user && user.email %></div>
-				</div>
-				<div class="row">
-					<div class="label">الهوية</div>
-					<div class="value"><%= user && user.id %></div>
+			<div class="md:col-span-2 bg-white border rounded-xl p-6">
+				<h3 class="text-lg font-semibold mb-4">Profile details</h3>
+				<div class="space-y-3">
+					<div>
+						<div class="text-xs uppercase tracking-wide text-slate-500">Full name</div>
+						<div class="font-medium"><%= user && user.name %></div>
+					</div>
+					<div>
+						<div class="text-xs uppercase tracking-wide text-slate-500">Email</div>
+						<div class="font-medium"><%= user && user.email %></div>
+					</div>
+					<div>
+						<div class="text-xs uppercase tracking-wide text-slate-500">ID</div>
+						<div class="font-medium"><%= user && user.id %></div>
+					</div>
 				</div>
 			</div>
+		</section>
+	</main>
+	<footer class="border-t bg-white">
+		<div class="max-w-6xl mx-auto px-4 py-6 text-sm text-slate-500 flex items-center justify-between">
+			<p>&copy; <%= new Date().getFullYear() %> FinTrack. All rights reserved.</p>
+			<div class="flex items-center gap-3">
+				<a class="hover:text-slate-700" href="#">Privacy</a>
+				<a class="hover:text-slate-700" href="#">Terms</a>
+			</div>
 		</div>
-	</div>
+	</footer>
 </body>
 </html> 

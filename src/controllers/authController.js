@@ -1,9 +1,8 @@
 import User from "../models/User.js";
 import { doHash, doHashValidation, hmacHash } from "../utils/hashing.js";
-import { signToken } from "../utils/jwt.js";
-import { sendCookies, clearCookie } from "../utils/Cookies.js";
 import { sendMail } from "../utils/email.js";
 import { generateOTP } from "../utils/generateOTP.js";
+import { createUserSession, destroyUserSession } from "../utils/session.js";
 
 
 export const renderRegister = (req, res) => {
@@ -35,19 +34,7 @@ export const postRegister = async (req, res) => {
     const hashed = await doHash(password);
     const user = await User.create({ name, email, password: hashed });
 
-    const token = signToken({ id: user.id, name: user.name, email: user.email }, "7d");
-
-    sendCookies(res, {
-      name: "Authorization",
-      value: `Bearer ${token}`,
-      options: {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        path: "/",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      },
-    });
+    createUserSession(req, user);
 
     return res.redirect("/");
 
@@ -65,7 +52,7 @@ export const postLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ where: { email } });
+    const user = await User.scope('auth').findOne({ where: { email } });
     if (!user) {
       return res.status(401).render("pages/auth/login", {
         title: "Login",
@@ -83,19 +70,7 @@ export const postLogin = async (req, res) => {
       });
     }
 
-    const token = signToken({ id: user.id, name: user.name, email: user.email }, "7d");
-
-    sendCookies(res, {
-      name: "Authorization",
-      value: `Bearer ${token}`,
-      options: {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        path: "/",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      },
-    });
+    createUserSession(req, user);
 
     return res.redirect("/");
 
@@ -109,8 +84,8 @@ export const postLogin = async (req, res) => {
 };
 
 export const postLogout = async (req, res) => {
-  clearCookie(res, "Authorization");
-  return res.redirect("/login");
+  await destroyUserSession(req);
+  return res.redirect("/auth/login");
 };
 
 export const postSendVerificationCode = async (req, res) => {

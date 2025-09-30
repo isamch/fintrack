@@ -5,6 +5,7 @@ import * as viewHelpers from "./src/utils/viewHelpers.js";
 
 // import routes :
 import authRouter from './src/routes/web/authRoute.js';
+import homeRouter from './src/routes/web/homeRouter.js';
 
 // import db:
 import connectDB from './src/config/db.js';
@@ -53,8 +54,9 @@ app.set('views', './src/view');
 await connectDB();
 
 
-// web router (EJS views)
+// web routers (EJS views)
 app.use('/', authRouter);
+app.use('/', homeRouter);
 
 
 

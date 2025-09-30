@@ -17,12 +17,12 @@
 <body>
 	<div class="container">
 		<h2>تفعيل البريد الإلكتروني</h2>
-		<form action="/auth/verify/send" method="post">
+		<form action="/verify/send" method="post">
 			<button type="submit">إرسال رمز التفعيل إلى البريد</button>
 		</form>
 		<% if (old && old.info) { %><div class="info"><%= old.info %></div><% } %>
 
-		<form action="/auth/verify" method="post">
+		<form action="/verify" method="post">
 			<label>رمز التفعيل</label>
 			<input type="text" name="code" required />
 			<button type="submit">تفعيل</button>

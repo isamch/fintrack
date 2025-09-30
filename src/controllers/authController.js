@@ -2,7 +2,7 @@ import User from "../models/User.js";
 import { doHash, doHashValidation, hmacHash } from "../utils/hashing.js";
 import { sendMail } from "../utils/email.js";
 import { generateOTP } from "../utils/generateOTP.js";
-import { createUserSession, destroyUserSession } from "../utils/session.js";
+import { createUserSession, destroyUserSession, setEmailVerifiedSession } from "../utils/session.js";
 
 
 export const renderRegister = (req, res) => {
@@ -36,7 +36,7 @@ export const postRegister = async (req, res) => {
 
     createUserSession(req, user);
 
-    return res.redirect("/");
+    return res.redirect("/verify");
 
   } catch (error) {
     return res.status(500).render("pages/auth/register", {
@@ -72,6 +72,12 @@ export const postLogin = async (req, res) => {
 
     createUserSession(req, user);
 
+    if (!user.emailVerifiedAt) {
+      setEmailVerifiedSession(req, false);
+      return res.redirect('/verify');
+    }
+
+    setEmailVerifiedSession(req, true);
     return res.redirect("/");
 
   } catch (error) {
@@ -85,13 +91,13 @@ export const postLogin = async (req, res) => {
 
 export const postLogout = async (req, res) => {
   await destroyUserSession(req);
-  return res.redirect("/auth/login");
+  return res.redirect("/login");
 };
 
 export const postSendVerificationCode = async (req, res) => {
   try {
     const userId = req.user?.id;
-    const user = await User.findByPk(userId);
+    const user = await User.scope('withSensitive').findByPk(userId);
 
     if (!user) {
       return res.status(404).render("pages/auth/verify", {
@@ -133,7 +139,7 @@ export const postVerifyEmail = async (req, res) => {
     const userId = req.user?.id;
     const { code } = req.body;
 
-    const user = await User.findByPk(userId);
+    const user = await User.scope('withSensitive').findByPk(userId);
 
     if (!user) {
       return res.status(404).render("pages/auth/verify", {
@@ -172,6 +178,8 @@ export const postVerifyEmail = async (req, res) => {
     user.emailVerificationCodeHash = null;
     user.emailVerificationCodeExpiresAt = null;
     await user.save();
+
+    setEmailVerifiedSession(req, true);
 
     return res.redirect("/");
 

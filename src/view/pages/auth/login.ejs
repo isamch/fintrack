@@ -16,7 +16,7 @@
 <body>
 	<div class="container">
 		<h2>تسجيل الدخول</h2>
-		<form action="/auth/login" method="post">
+		<form action="/login" method="post">
 			<label>البريد الإلكتروني</label>
 			<input type="email" name="email" value="<%= (old && old.email) || '' %>" required />
 
@@ -26,7 +26,7 @@
 			<% if (errors && errors.general) { %><div class="error"><%= errors.general %></div><% } %>
 			<button type="submit">دخول</button>
 		</form>
-		<p>ليس لديك حساب؟ <a href="/auth/register">حساب جديد</a></p>
+		<p>ليس لديك حساب؟ <a href="/register">حساب جديد</a></p>
 	</div>
 </body>
 </html> 

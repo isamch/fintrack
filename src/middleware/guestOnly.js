@@ -1,15 +1,14 @@
 import { getUserFromSession } from "../utils/session.js";
 
 
-export const sessionAuth = (req, res, next) => {
+export const guestOnly = (req, res, next) => {
 
   const user = getUserFromSession(req);
 
-  if (!user) {
-    return res.redirect('/login');
+  if (user) {
+    return res.redirect('/');
   }
 
-  req.user = user;
   next();
 
 }; 

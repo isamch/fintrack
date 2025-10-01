@@ -52,6 +52,23 @@ export const passwordSchema = Joi.object({
 });
 
 /**
+ * ✅ Forgot password (OTP) validation
+ */
+export const forgotPasswordSchema = Joi.object({
+  email: Joi.string().email().required(),
+});
+
+/**
+ * ✅ Reset password with OTP validation
+ */
+export const resetPasswordWithOtpSchema = Joi.object({
+  email: Joi.string().email().required(),
+  code: Joi.string().length(6).required(),
+  newPassword: Joi.string().min(6).required(),
+  confirmNewPassword: Joi.string().valid(Joi.ref('newPassword')).required(),
+});
+
+/**
  * ✅ Profile update validation
  */
 export const updateProfileSchema = Joi.object({

@@ -18,12 +18,14 @@ export const emailTemplates = {
     </div>
   `,
 
-  resetPassword: ({ name, link }) => `
+  // updated to OTP-based reset template
+  resetPasswordOtp: ({ name, code }) => `
     <div style="font-family: Arial, sans-serif; text-align: center;">
-      <h2>Password Reset Request</h2>
+      <h2>Password Reset Code</h2>
       <p>Hi ${name},</p>
-      <p>Click the link below to reset your password:</p>
-      <a href="${link}">${link}</a>
+      <p>Your password reset code is:</p>
+      <h1 style="color: #d9534f;">${code}</h1>
+      <p>This code will expire in 10 minutes. If you did not request this, you can ignore this email.</p>
     </div>
   `
 };

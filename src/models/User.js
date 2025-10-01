@@ -35,6 +35,15 @@ const User = sequelize.define("User", {
     type: DataTypes.DATE,
     allowNull: true,
   },
+  // new fields for password reset via OTP
+  passwordResetCodeHash: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+  },
+  passwordResetCodeExpiresAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
 }, {
   tableName: "users",
   modelName: "User",
@@ -43,10 +52,10 @@ const User = sequelize.define("User", {
     { unique: true, fields: ["email"] },
   ],
   defaultScope: {
-    attributes: { exclude: ["password", "emailVerificationCodeHash", "emailVerificationCodeExpiresAt"] }
+    attributes: { exclude: ["password", "emailVerificationCodeHash", "emailVerificationCodeExpiresAt", "passwordResetCodeHash", "passwordResetCodeExpiresAt"] }
   },
   scopes: {
-    withSensitive: { attributes: { include: ["password", "emailVerificationCodeHash", "emailVerificationCodeExpiresAt"] } },
+    withSensitive: { attributes: { include: ["password", "emailVerificationCodeHash", "emailVerificationCodeExpiresAt", "passwordResetCodeHash", "passwordResetCodeExpiresAt"] } },
     auth: { attributes: { include: ["password"] } }
   }
 });

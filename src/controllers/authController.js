@@ -190,4 +190,82 @@ export const postVerifyEmail = async (req, res) => {
       old: {}
     });
   }
+};
+
+// ===== Password Reset via OTP (Web) =====
+export const renderForgotPassword = (req, res) => {
+  return res.render("pages/auth/forgot", { title: "Forgot Password", errors: null, old: {} });
+};
+
+export const postForgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.scope('withSensitive').findOne({ where: { email } });
+
+    // Always show generic success page/flash
+    if (user) {
+      const code = generateOTP(6);
+      user.passwordResetCodeHash = hmacHash(code);
+      user.passwordResetCodeExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+      await user.save();
+
+      await sendMail({
+        to: user.email,
+        subject: "Your password reset code",
+        templateName: "resetPasswordOtp",
+        templateData: { name: user.name, code },
+      });
+    }
+
+    return res.render("pages/auth/forgot", { title: "Forgot Password", errors: null, old: { info: "If the email exists, a code was sent." } });
+
+  } catch (error) {
+    return res.status(500).render("pages/auth/forgot", { title: "Forgot Password", errors: { general: error.message || "Something went wrong" }, old: req.body || {} });
+  }
+};
+
+export const renderResetPassword = (req, res) => {
+  // optional: pre-fill email from query if provided
+  const { email = "" } = req.query || {};
+  return res.render("pages/auth/reset", { title: "Reset Password", errors: null, old: { email } });
+};
+
+export const postResetPassword = async (req, res) => {
+  try {
+    const { email, code, newPassword, confirmNewPassword } = req.body;
+
+    if (newPassword !== confirmNewPassword) {
+      return res.status(400).render("pages/auth/reset", { title: "Reset Password", errors: { confirmNewPassword: "Passwords do not match" }, old: { email } });
+    }
+
+    const user = await User.scope('withSensitive').findOne({ where: { email } });
+    if (!user) {
+      return res.status(400).render("pages/auth/reset", { title: "Reset Password", errors: { general: "Invalid code or email" }, old: { email } });
+    }
+
+    if (!user.passwordResetCodeHash || !user.passwordResetCodeExpiresAt) {
+      return res.status(400).render("pages/auth/reset", { title: "Reset Password", errors: { general: "No reset in progress" }, old: { email } });
+    }
+
+    if (new Date() > new Date(user.passwordResetCodeExpiresAt)) {
+      return res.status(400).render("pages/auth/reset", { title: "Reset Password", errors: { general: "Reset code expired" }, old: { email } });
+    }
+
+    const providedHash = hmacHash(code);
+    if (providedHash !== user.passwordResetCodeHash) {
+      return res.status(400).render("pages/auth/reset", { title: "Reset Password", errors: { general: "Invalid reset code" }, old: { email } });
+    }
+
+    const hashed = await doHash(newPassword);
+    user.password = hashed;
+    user.passwordResetCodeHash = null;
+    user.passwordResetCodeExpiresAt = null;
+    await user.save();
+
+    return res.redirect('/login');
+
+  } catch (error) {
+    return res.status(500).render("pages/auth/reset", { title: "Reset Password", errors: { general: error.message || "Something went wrong" }, old: req.body || {} });
+  }
 }; 

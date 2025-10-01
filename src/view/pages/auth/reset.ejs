@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title || 'Reset Password' %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:#f7f8fa; margin:0; }
+    .container { max-width:480px; margin: 3rem auto; background:#fff; border-radius:12px; box-shadow:0 6px 30px rgba(0,0,0,0.06); overflow:hidden; }
+    .header { padding:1.25rem 1.5rem; border-bottom:1px solid #eef0f3; background:#fff; }
+    .header h1 { margin:0; font-size:1.25rem; font-weight:700; color:#111827; }
+    .content { padding:1.5rem; }
+    .title { margin:0 0 0.75rem; font-size:1.125rem; font-weight:600; color:#111827; }
+    .desc { margin:0 0 1rem; color:#6b7280; font-size:0.95rem; }
+    .alert { padding:0.75rem 0.9rem; border-radius:8px; margin-bottom:1rem; font-size:0.95rem; }
+    .alert-danger { background:#fee2e2; color:#991b1b; border:1px solid #fecaca; }
+    .form-label { display:block; font-weight:600; margin-bottom:0.35rem; color:#374151; }
+    .form-control { width:100%; padding:0.7rem 0.85rem; border:1px solid #e5e7eb; border-radius:8px; font-size:0.95rem; outline:none; transition: border-color .15s ease; background:#fff; }
+    .form-control:focus { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.08); }
+    .text-danger { color:#b91c1c; font-size:0.85rem; }
+    .btn { display:inline-block; width:100%; background:#10b981; color:#fff; padding:0.8rem 1rem; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-size:0.95rem; }
+    .btn:hover { background:#059669; }
+    .footer { padding:1rem 1.5rem; border-top:1px solid #eef0f3; text-align:center; font-size:0.9rem; color:#6b7280; background:#fafafa; }
+    a { color:#2563eb; text-decoration:none; }
+    a:hover { text-decoration:underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>FinTrack</h1>
+    </div>
+    <div class="content">
+      <h2 class="title">Reset Password</h2>
+      <p class="desc">Enter the 6-digit code sent to your email and choose a new password.</p>
+
+      <% if (errors && errors.general) { %>
+        <div class="alert alert-danger"><%= errors.general %></div>
+      <% } %>
+
+      <form method="POST" action="/reset-password">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" id="email" name="email" class="form-control" value="<%= (old && old.email) || '' %>" required />
+          <% if (errors && errors.email) { %>
+            <small class="text-danger"><%= errors.email %></small>
+          <% } %>
+        </div>
+
+        <div class="mb-3">
+          <label for="code" class="form-label">Reset Code</label>
+          <input type="text" id="code" name="code" class="form-control" maxlength="6" required />
+          <% if (errors && errors.code) { %>
+            <small class="text-danger"><%= errors.code %></small>
+          <% } %>
+        </div>
+
+        <div class="mb-3">
+          <label for="newPassword" class="form-label">New Password</label>
+          <input type="password" id="newPassword" name="newPassword" class="form-control" required />
+          <% if (errors && errors.newPassword) { %>
+            <small class="text-danger"><%= errors.newPassword %></small>
+          <% } %>
+        </div>
+
+        <div class="mb-3">
+          <label for="confirmNewPassword" class="form-label">Confirm New Password</label>
+          <input type="password" id="confirmNewPassword" name="confirmNewPassword" class="form-control" required />
+          <% if (errors && errors.confirmNewPassword) { %>
+            <small class="text-danger"><%= errors.confirmNewPassword %></small>
+          <% } %>
+        </div>
+
+        <button type="submit" class="btn">Reset Password</button>
+      </form>
+
+    </div>
+    <div class="footer">
+      <a href="/login">Back to Login</a>
+    </div>
+  </div>
+</body>
+</html> 

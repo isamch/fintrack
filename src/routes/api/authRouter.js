@@ -20,7 +20,6 @@ router.patch("/send-verification-code", authMiddleware, sendCodeVerifyEmail);
 router.patch("/verify-verification-code", authMiddleware, VerifyCodeEmail);
 
 
-
 router.get('/home', authMiddleware, (req, res) => {
   return res.json({
     message: "hello to home"

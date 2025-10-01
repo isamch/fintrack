@@ -192,6 +192,7 @@ export const postVerifyEmail = async (req, res) => {
   }
 };
 
+
 // ===== Password Reset via OTP (Web) =====
 export const renderForgotPassword = (req, res) => {
   return res.render("pages/auth/forgot", { title: "Forgot Password", errors: null, old: {} });
@@ -202,6 +203,7 @@ export const postForgotPassword = async (req, res) => {
     const { email } = req.body;
 
     const user = await User.scope('withSensitive').findOne({ where: { email } });
+
 
     // Always show generic success page/flash
     if (user) {

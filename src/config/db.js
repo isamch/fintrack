@@ -24,7 +24,7 @@ const connectDB = async () => {
     );
 
     // Avoid using alter in dev to prevent index accumulation issues
-    await sequelize.sync();
+    // await sequelize.sync({ force: true });
     console.log("Sequelize models synchronized");
 
   } catch (error) {

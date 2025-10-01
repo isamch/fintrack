@@ -220,7 +220,8 @@ export const postForgotPassword = async (req, res) => {
       });
     }
 
-    return res.render("pages/auth/forgot", { title: "Forgot Password", errors: null, old: { info: "If the email exists, a code was sent." } });
+    return res.render("pages/auth/reset", { title: "Reset Password", errors: null, old: { email } });
+
 
   } catch (error) {
     return res.status(500).render("pages/auth/forgot", { title: "Forgot Password", errors: { general: error.message || "Something went wrong" }, old: req.body || {} });

@@ -36,7 +36,7 @@ export const loginSchema = Joi.object({
 });
 
 /**
- * ✅ Email validation (مثلاً نسيت كلمة السر)
+ * ✅ Email validation (Forgot password)
  */
 export const emailSchema = Joi.object({
   email: Joi.string().email().required(),

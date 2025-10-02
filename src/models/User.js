@@ -35,7 +35,6 @@ const User = sequelize.define("User", {
     type: DataTypes.DATE,
     allowNull: true,
   },
-  // new fields for password reset via OTP
   passwordResetCodeHash: {
     type: DataTypes.STRING(255),
     allowNull: true,

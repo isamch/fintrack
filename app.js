@@ -18,6 +18,7 @@ import cookieParser from "cookie-parser";
 import session from 'express-session';
 import connectSessionSequelize from 'connect-session-sequelize';
 import { initSessionTable } from './src/models/SessionStore.js';
+import './src/models/index.js';
 
 
 
@@ -41,6 +42,12 @@ app.set('views', './src/view');
 
 // connect db
 await connectDB();
+
+// optional: sync models via env flags (development only recommended)
+if (String(process.env.DB_SYNC || '').toLowerCase() === 'true') {
+  const alter = String(process.env.DB_SYNC_ALTER || '').toLowerCase() === 'true';
+  await sequelize.sync({ alter });
+}
 
 // ensure sessions table exists
 await initSessionTable();

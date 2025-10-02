@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><%= title %></title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<style>
+		body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+	</style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+	<header class="border-b bg-white">
+		<nav class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+			<a href="/" class="font-semibold text-slate-900">FinTrack</a>
+			<div class="flex items-center gap-3">
+				<a href="/" class="text-sm text-slate-600 hover:text-slate-900">Home</a>
+				<a href="/about" class="text-sm text-slate-600 hover:text-slate-900">About</a>
+				<a href="/transactions" class="text-sm text-slate-600 hover:text-slate-900">Transactions</a>
+				<a href="/profile" class="text-sm text-slate-600 hover:text-slate-900">Profile</a>
+				<a href="/verify" class="text-sm text-slate-600 hover:text-slate-900">Verify</a>
+			</div>
+		</nav>
+	</header>
+	<main class="max-w-6xl mx-auto px-4 py-10">
+
+		<h1 class="text-2xl font-semibold mb-6"><%= mode === 'create' ? 'Add Transaction' : 'Edit Transaction' %></h1>
+
+		<form method="post" action="<%= mode === 'create' ? '/transactions' : '/transactions/' + item.id %>" class="bg-white border rounded-md p-6 space-y-4 max-w-2xl">
+			<div>
+				<label class="block text-sm text-slate-700">Type</label>
+				<select name="type" class="mt-1 w-full border rounded-md px-3 py-2" required>
+					<option value="income" <%= item && item.type === 'income' ? 'selected' : '' %>>Income</option>
+					<option value="expense" <%= item && item.type === 'expense' ? 'selected' : '' %>>Expense</option>
+				</select>
+			</div>
+			<div>
+				<label class="block text-sm text-slate-700">Category</label>
+				<select name="categoryId" class="mt-1 w-full border rounded-md px-3 py-2">
+					<option value="">— None —</option>
+					<% categories.forEach(c => { %>
+						<option value="<%= c.id %>" <%= item && String(item.categoryId) === String(c.id) ? 'selected' : '' %>><%= c.name %></option>
+					<% }) %>
+				</select>
+			</div>
+			<div>
+				<label class="block text-sm text-slate-700">Amount</label>
+				<input type="number" name="amount" step="0.01" value="<%= item ? item.amount : '' %>" class="mt-1 w-full border rounded-md px-3 py-2" required />
+			</div>
+			<div>
+				<label class="block text-sm text-slate-700">Currency</label>
+				<input type="text" name="currency" maxlength="3" value="<%= item ? item.currency : '' %>" class="mt-1 w-full border rounded-md px-3 py-2" placeholder="MAD" />
+			</div>
+			<div>
+				<label class="block text-sm text-slate-700">Date</label>
+				<input type="date" name="occurredAt" value="<%= item ? new Date(item.occurredAt).toISOString().slice(0,10) : '' %>" class="mt-1 w-full border rounded-md px-3 py-2" required />
+			</div>
+			<div>
+				<label class="block text-sm text-slate-700">Description</label>
+				<input type="text" name="description" value="<%= item ? (item.description || '') : '' %>" class="mt-1 w-full border rounded-md px-3 py-2" />
+			</div>
+			<div class="pt-2">
+				<button class="px-4 py-2 rounded-md bg-slate-900 text-white hover:bg-slate-800"><%= mode === 'create' ? 'Create' : 'Save changes' %></button>
+				<a href="/transactions" class="ml-2 text-slate-600 hover:text-slate-900">Cancel</a>
+			</div>
+		</form>
+
+	</main>
+	<footer class="border-t bg-white">
+		<div class="max-w-6xl mx-auto px-4 py-6 text-sm text-slate-500 flex items-center justify-between">
+			<span>FinTrack</span>
+			<span>&copy; <%= new Date().getFullYear() %></span>
+		</div>
+	</footer>
+</body>
+</html> 

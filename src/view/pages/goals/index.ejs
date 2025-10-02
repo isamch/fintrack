@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><%= title %></title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<style>
+		body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+	</style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+	<header class="border-b bg-white">
+		<nav class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+			<a href="/" class="font-semibold text-slate-900">FinTrack</a>
+			<div class="flex items-center gap-3">
+				<a href="/" class="text-sm text-slate-600 hover:text-slate-900">Home</a>
+				<a href="/about" class="text-sm text-slate-600 hover:text-slate-900">About</a>
+				<a href="/transactions" class="text-sm text-slate-600 hover:text-slate-900">Transactions</a>
+				<a href="/budgets" class="text-sm text-slate-600 hover:text-slate-900">Budgets</a>
+				<a href="/goals" class="text-sm text-slate-900 font-medium">Saving Goals</a>
+				<a href="/profile" class="text-sm text-slate-600 hover:text-slate-900">Profile</a>
+				<a href="/verify" class="text-sm text-slate-600 hover:text-slate-900">Verify</a>
+			</div>
+		</nav>
+	</header>
+	<main class="max-w-6xl mx-auto px-4 py-10">
+
+		<div class="flex items-center justify-between mb-6">
+			<h1 class="text-2xl font-semibold">Saving Goals</h1>
+			<a href="/goals/new" class="px-4 py-2 rounded-md bg-slate-900 text-white hover:bg-slate-800">Add Goal</a>
+		</div>
+
+		<div class="grid gap-4 md:grid-cols-2">
+			<% items.forEach(g => { %>
+				<% const target = Number(g.targetAmount); const current = Number(g.currentAmount || 0); const pct = Math.min(100, Math.round((current / (target || 1)) * 100)); const widthClass = (pct >= 100 ? 'w-full' : (pct >= 75 ? 'w-3/4' : (pct >= 50 ? 'w-1/2' : (pct >= 25 ? 'w-1/4' : 'w-0')))); %>
+				<div class="bg-white border rounded-md p-4">
+					<div class="flex items-center justify-between">
+						<div>
+							<div class="font-medium text-slate-900"><%= g.name %></div>
+							<div class="text-sm text-slate-500">
+								Target: <%= target.toFixed(2) %> <%= g.currency %> • Current: <%= current.toFixed(2) %>
+							</div>
+						</div>
+						<div>
+							<a href="/goals/<%= g.id %>/edit" class="text-slate-700 hover:text-slate-900">Edit</a>
+							<form method="post" action="/goals/<%= g.id %>/delete" class="inline-block ml-3" onsubmit="return confirm('Delete this goal?')">
+								<button class="text-red-600 hover:text-red-700">Delete</button>
+							</form>
+						</div>
+					</div>
+					<div class="mt-3">
+						<div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+							<div class="h-2 bg-blue-500 <%= widthClass %>"></div>
+						</div>
+						<div class="text-xs text-slate-500 mt-1"><%= pct %>% achieved</div>
+					</div>
+					<% if (g.dueDate) { const daysLeft = Math.ceil((new Date(g.dueDate) - new Date()) / (1000*60*60*24)); %>
+						<div class="mt-3 text-xs <%= daysLeft <= 7 ? 'text-red-600' : 'text-slate-600' %>">
+							Due in <%= daysLeft %> day<%= daysLeft === 1 ? '' : 's' %> (<%= new Date(g.dueDate).toISOString().slice(0,10) %>)
+						</div>
+					<% } %>
+				</div>
+			<% }) %>
+		</div>
+
+	</main>
+	<footer class="border-t bg-white">
+		<div class="max-w-6xl mx-auto px-4 py-6 text-sm text-slate-500 flex items-center justify-between">
+			<span>FinTrack</span>
+			<span>&copy; <%= new Date().getFullYear() %></span>
+		</div>
+	</footer>
+</body>
+</html> 

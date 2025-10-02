@@ -50,10 +50,14 @@
 				<label class="block text-sm text-slate-700">Amount</label>
 				<input type="number" name="amount" step="0.01" value="<%= item ? item.amount : '' %>" class="mt-1 w-full border rounded-md px-3 py-2" required />
 			</div>
-			<div>
-				<label class="block text-sm text-slate-700">Currency</label>
-				<input type="text" name="currency" maxlength="3" value="<%= item ? item.currency : '' %>" class="mt-1 w-full border rounded-md px-3 py-2" placeholder="MAD" />
-			</div>
+				<div>
+		<label class="block text-sm text-slate-700">Currency</label>
+		<select name="currency" class="mt-1 w-full border rounded-md px-3 py-2" required>
+			<% (currencies || ["MAD","USD","EUR"]).forEach(cur => { %>
+				<option value="<%= cur %>" <%= item && item.currency === cur ? 'selected' : '' %>><%= cur %></option>
+			<% }) %>
+		</select>
+	</div>
 			<div>
 				<label class="block text-sm text-slate-700">Date</label>
 				<input type="date" name="occurredAt" value="<%= item ? new Date(item.occurredAt).toISOString().slice(0,10) : '' %>" class="mt-1 w-full border rounded-md px-3 py-2" required />

@@ -56,11 +56,13 @@ export async function renderCreate(req, res, next) {
   try {
     const userId = req.user.id;
     const categories = await Category.findAll({ where: { userId }, order: [["name", "ASC"]] });
+    const currencies = ["MAD", "USD", "EUR", "GBP", "SAR", "AED"]; 
     return res.render("pages/transactions/form", {
       title: "Add Transaction",
       mode: "create",
       item: null,
       categories,
+      currencies,
       user: req.user,
     });
   } catch (err) {
@@ -100,11 +102,13 @@ export async function renderEdit(req, res, next) {
     if (!item) {
       return res.redirect("/transactions");
     }
+    const currencies = ["MAD", "USD", "EUR", "GBP", "SAR", "AED"]; 
     return res.render("pages/transactions/form", {
       title: "Edit Transaction",
       mode: "edit",
       item,
       categories,
+      currencies,
       user: req.user,
     });
   } catch (err) {

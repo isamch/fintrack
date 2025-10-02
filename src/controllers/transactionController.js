@@ -13,14 +13,6 @@ export async function listTransactions(req, res, next) {
     if (req.query.type && ["income", "expense"].includes(req.query.type)) {
       where.type = req.query.type;
     }
-    if (req.query.categoryId) {
-      where.categoryId = req.query.categoryId || null;
-    }
-    if (req.query.from || req.query.to) {
-      where.occurredAt = {};
-      if (req.query.from) where.occurredAt[Op.gte] = new Date(req.query.from);
-      if (req.query.to) where.occurredAt[Op.lte] = new Date(req.query.to);
-    }
 
     const [categories, { rows, count }] = await Promise.all([
       Category.findAll({ where: { userId }, order: [["name", "ASC"]] }),

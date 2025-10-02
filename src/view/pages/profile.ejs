@@ -17,8 +17,10 @@
 		<nav class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
 			<a href="/" class="font-semibold text-slate-900">FinTrack</a>
 			<div class="flex items-center gap-3">
-				<a href="/" class="text-sm text-slate-600 hover:text-slate-900">Home</a>
-				<a href="/verify" class="text-sm text-slate-600 hover:text-slate-900">Verify</a>
+				<a href="/" class="text-sm <%= (typeof path !== 'undefined' && path === '/') ? 'text-slate-900 font-medium' : 'text-slate-600 hover:text-slate-900' %>">Dashboard</a>
+				<% if (!emailVerified) { %>
+					<a href="/verify" class="text-sm text-amber-600 hover:text-amber-700">Verify Email</a>
+				<% } %>
 				<form action="/logout" method="post">
 					<button type="submit" class="px-3 py-1.5 rounded-md bg-slate-900 text-white hover:bg-slate-800 text-sm">Logout</button>
 				</form>

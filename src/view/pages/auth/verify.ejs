@@ -17,8 +17,15 @@
 		<nav class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
 			<a href="/" class="font-semibold text-slate-900">FinTrack</a>
 			<div class="flex items-center gap-3">
-				<a href="/login" class="text-sm text-slate-600 hover:text-slate-900">Sign in</a>
-				<a href="/register" class="text-sm text-slate-600 hover:text-slate-900">Sign up</a>
+				<% if (user) { %>
+					<a href="/" class="text-sm text-slate-600 hover:text-slate-900">Dashboard</a>
+					<form action="/logout" method="post" class="inline-block">
+						<button class="text-sm text-slate-600 hover:text-slate-900">Logout</button>
+					</form>
+				<% } else { %>
+					<a href="/login" class="text-sm text-slate-600 hover:text-slate-900">Sign in</a>
+					<a href="/register" class="text-sm text-slate-600 hover:text-slate-900">Sign up</a>
+				<% } %>
 			</div>
 		</nav>
 	</header>

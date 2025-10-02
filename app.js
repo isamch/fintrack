@@ -34,6 +34,12 @@ app.use(express.urlencoded({ extended: true }));
 // cookies parser
 app.use(cookieParser());
 
+// expose session user and verification to all views
+app.use((req, res, next) => {
+  res.locals.user = (req.session && req.session.user) || null;
+  res.locals.emailVerified = Boolean(req.session && req.session.emailVerified);
+  next();
+});
 
 // Configure EJS view engine
 app.set('view engine', 'ejs');
@@ -73,7 +79,6 @@ app.use(session({
     maxAge: 7 * 24 * 60 * 60 * 1000
   }
 }));
-
 
 
 // web routers (EJS views)

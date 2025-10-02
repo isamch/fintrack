@@ -4,7 +4,7 @@ export async function listCategories(req, res, next) {
   try {
     const userId = req.user.id;
     const items = await Category.findAll({ where: { userId }, order: [["type", "ASC"], ["name", "ASC"]] });
-    return res.render('pages/categories/index', { title: 'Categories', items, user: req.user });
+    return res.render('pages/categories/index', { title: 'Categories', categories: items, user: req.user });
   } catch (err) {
     return next(err);
   }

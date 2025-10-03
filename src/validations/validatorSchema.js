@@ -80,3 +80,47 @@ export const updateProfileSchema = Joi.object({
   phone: Joi.string().pattern(/^[0-9]{10,15}$/),
   gender: Joi.string().valid('male', 'female', 'other'),
 });
+
+/**
+ * ✅ Category validation
+ */
+export const categorySchema = Joi.object({
+  name: Joi.string().min(1).max(100).required(),
+  type: Joi.string().valid('income', 'expense').required(),
+});
+
+/**
+ * ✅ Transaction validation
+ */
+export const transactionSchema = Joi.object({
+  type: Joi.string().valid('income', 'expense').required(),
+  amount: Joi.number().positive().precision(2).required(),
+  currency: Joi.string().length(3).default('MAD'),
+  description: Joi.string().max(255).allow(null, ''),
+  occurredAt: Joi.date().required(),
+  categoryId: Joi.number().integer().positive().allow(null),
+});
+
+/**
+ * ✅ Budget validation
+ */
+export const budgetSchema = Joi.object({
+  categoryId: Joi.number().integer().positive().allow(null),
+  period: Joi.string().valid('monthly', 'weekly', 'yearly').default('monthly'),
+  month: Joi.number().integer().min(1).max(12).allow(null),
+  year: Joi.number().integer().min(2000).max(2100).allow(null),
+  amount: Joi.number().positive().precision(2).required(),
+  currency: Joi.string().length(3).default('MAD'),
+});
+
+/**
+ * ✅ Saving Goal validation
+ */
+export const savingGoalSchema = Joi.object({
+  name: Joi.string().min(1).max(150).required(),
+  targetAmount: Joi.number().positive().precision(2).required(),
+  currentAmount: Joi.number().min(0).precision(2).default(0),
+  currency: Joi.string().length(3).default('MAD'),
+  dueDate: Joi.date().allow(null),
+  description: Joi.string().max(255).allow(null, ''),
+});

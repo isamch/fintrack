@@ -4,8 +4,7 @@ import express from 'express';
 import * as viewHelpers from "./src/utils/viewHelpers.js";
 
 // import routes :
-import authRouter from './src/routes/web/authRoute.js';
-import homeRouter from './src/routes/web/homeRouter.js';
+import routes from './src/routes/web/index.js';
 
 // import db:
 import connectDB, { sequelize } from './src/config/db.js';
@@ -49,7 +48,7 @@ app.set('views', './src/view');
 // connect db
 await connectDB();
 
-// optional: sync models via env flags (development only recommended)
+// sync models via env flags (development only recommended)
 if (String(process.env.DB_SYNC || '').toLowerCase() === 'true') {
   const alter = String(process.env.DB_SYNC_ALTER || '').toLowerCase() === 'true';
   await sequelize.sync({ alter });
@@ -82,8 +81,7 @@ app.use(session({
 
 
 // web routers (EJS views)
-app.use('/', authRouter);
-app.use('/', homeRouter);
+app.use('/', routes);
 
 
 

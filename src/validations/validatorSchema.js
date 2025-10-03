@@ -82,6 +82,13 @@ export const updateProfileSchema = Joi.object({
 });
 
 /**
+ * ✅ Update name validation
+ */
+export const updateNameSchema = Joi.object({
+  name: Joi.string().min(3).max(100).required(),
+});
+
+/**
  * ✅ Category validation
  */
 export const categorySchema = Joi.object({

@@ -1,0 +1,14 @@
+<% 
+// Helper function for form field validation styling
+function getFieldClass(fieldName, validationErrors, baseClass = 'border-slate-300') {
+  return (typeof validationErrors !== 'undefined' && validationErrors[fieldName]) ? 'border-red-300' : baseClass;
+}
+
+function getFieldValue(fieldName, oldInput, defaultValue = '') {
+  return (typeof oldInput !== 'undefined' && oldInput[fieldName]) ? oldInput[fieldName] : defaultValue;
+}
+
+function showFieldError(fieldName, validationErrors) {
+  return (typeof validationErrors !== 'undefined' && validationErrors[fieldName]);
+}
+%>

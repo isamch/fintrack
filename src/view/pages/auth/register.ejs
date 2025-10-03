@@ -24,6 +24,7 @@
 	<main class="max-w-6xl mx-auto px-4 py-10">
 		<section class="max-w-md mx-auto bg-white border rounded-xl p-6 shadow-sm">
 			<h2 class="text-xl font-semibold">Create an account</h2>
+			<%- include('../../partials/validation-errors') %>
 			<form action="/register" method="post" class="mt-4 space-y-4">
 				<div>
 					<label class="block text-sm text-slate-600">Full name</label>

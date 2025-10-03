@@ -32,6 +32,8 @@
 
 		<h1 class="text-2xl font-semibold mb-6"><%= mode === 'create' ? 'Add Goal' : 'Edit Goal' %></h1>
 
+		<%- include('../../partials/validation-errors') %>
+
 		<form method="post" action="<%= mode === 'create' ? '/goals' : '/goals/' + item.id %>" class="bg-white border rounded-md p-6 space-y-4 max-w-2xl">
 			<div>
 				<label class="block text-sm text-slate-700">Name</label>
